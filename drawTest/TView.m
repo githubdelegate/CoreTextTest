@@ -330,7 +330,7 @@ static CGFloat widthCallback(void* ref){
     CGContextTranslateCTM(ctx, 0, self.bounds.size.height);
     CGContextScaleCTM(ctx, 1.0, -1.0);
     // --------- GWW ------------
-    NSMutableAttributedString *atrriStr = [[NSMutableAttributedString alloc] initWithString:@"一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十\n\n一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十gh"];
+    NSMutableAttributedString *atrriStr = [[NSMutableAttributedString alloc] initWithString:@"一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十\n一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十gh"];
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     CFStringRef fontName = (__bridge CFStringRef)[UIFont systemFontOfSize:17].fontName;
     CGFloat fontSize     = [UIFont systemFontOfSize:17].pointSize;
@@ -342,7 +342,8 @@ static CGFloat widthCallback(void* ref){
     
     CTTextAlignment alignment = kCTTextAlignmentLeft;
     CGFloat lSpacing = roundf(0);
-    CGFloat headIndent = roundf(10);
+    CGFloat headIndent = roundf(0);
+    CGFloat tailIndent = round(-0);
     //    CGFloat minLine  = lineHeight;
     //    CGFloat maxLine  = lineHeight;
     CGFloat pSpacing = roundf(30);
@@ -354,11 +355,15 @@ static CGFloat widthCallback(void* ref){
         { kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(lSpacing), &lSpacing },
         { kCTParagraphStyleSpecifierMinimumLineSpacing, sizeof(lSpacing), &lSpacing },
         { kCTParagraphStyleSpecifierMaximumLineSpacing, sizeof(lSpacing), &lSpacing },
+        { kCTParagraphStyleSpecifierParagraphSpacingBefore,sizeof(pSpacing), &pSpacing },
         { kCTParagraphStyleSpecifierParagraphSpacing,   sizeof(pSpacing), &pSpacing },
         { kCTParagraphStyleSpecifierLineBreakMode,      sizeof(CTLineBreakMode), &lineBreak },
+        // 每段中除第一行外每行的缩进大小
         {kCTParagraphStyleSpecifierHeadIndent,sizeof(headIndent),&headIndent },
-        {kCTParagraphStyleSpecifierFirstLineHeadIndent,sizeof(headIndent),&headIndent }
-        
+        // 每段第一行缩进大小
+        {kCTParagraphStyleSpecifierFirstLineHeadIndent,sizeof(headIndent),&headIndent},
+        // 当为正值的时候 表示每行开头到尾部的距离，为负值的时候表示每行尾部到容器边界的距离
+        {kCTParagraphStyleSpecifierTailIndent,sizeof(tailIndent),&tailIndent}
     };
     
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
@@ -370,9 +375,8 @@ static CGFloat widthCallback(void* ref){
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL,rect);
     CTFrameRef frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, 30), path,nil);
-    CTFrameRef frame2 =  CTFramesetterCreateFrame(frameSetter, CFRangeMake(30, 34), path, nil);
+    CTFrameRef frame2 =  CTFramesetterCreateFrame(frameSetter, CFRangeMake(30, atrriStr.length - 30), path, nil);
 
-    
     //
     CFArrayRef lines = CTFrameGetLines(frame2);
     CFIndex count = CFArrayGetCount(lines);
