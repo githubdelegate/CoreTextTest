@@ -11,6 +11,7 @@
 
 #import <CoreText/CoreText.h>
 #import "GWWImageAttachment.h"
+#import "GWWTextAttachmentCallbackModel.h"
 //
 #define ImgWidth (([[UIScreen mainScreen] bounds].size.width - 20) / 3)
 #define ScreenWith ([[UIScreen mainScreen] bounds].size.width)
@@ -174,6 +175,43 @@ static CGFloat widthCallback(void* ref){
     }
 }
 
+- (NSDictionary *)p_addAttri:(int)i{
+    CGFloat pSpacing = 0;
+    pSpacing = roundf(0);
+    
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    CTLineBreakMode lineBreak = kCTLineBreakByCharWrapping;
+    
+    UIFont *f = [UIFont systemFontOfSize:1];
+    CFStringRef fontName = (__bridge CFStringRef)f.fontName;
+    CGFloat fontSize     = f.pointSize;
+    CTFontRef ctfont     = CTFontCreateWithName(fontName, fontSize, NULL);
+    [attributes setObject:(__bridge id)ctfont forKey:(id)kCTFontAttributeName];
+    
+    CTParagraphStyleSetting setting[] = {
+        { kCTParagraphStyleSpecifierParagraphSpacing,   sizeof(pSpacing), &pSpacing },
+         { kCTParagraphStyleSpecifierLineBreakMode,      sizeof(CTLineBreakMode), &lineBreak }
+    };
+    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
+    [attributes setObject:(__bridge id)paragraphStyle forKey:NSParagraphStyleAttributeName];
+    // 注意这里要释放paragraphStyle 因为 addAttribute方法会Retain 一下
+    
+    GWWTextAttachmentCallbackModel *model = [GWWTextAttachmentCallbackModel new];
+    if (i == 1) {
+        model.size = CGSizeMake(360, 5);
+    }else{
+        model.size = CGSizeMake(360, 100);
+    }
+    model.originalString = @"\uFFFC";
+    
+    CTRunDelegateCallbacks callbacks = model.callbacks;
+    CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge_retained void *)model);
+    [attributes setObject:(__bridge id _Nonnull)(runDelegate) forKey:(NSString *)kCTRunDelegateAttributeName];
+    CFRelease(paragraphStyle);
+    CFRelease(runDelegate);
+    return attributes;
+}
+
 - (void)drawRect:(CGRect)rect{
     // 总结
     // 1. 一个长的string 生成多个frame 然后每个frame 都调用CTFrameDraw(frame, ctx);去绘制的时候每个frame都是从容器的原点开始绘制的
@@ -185,83 +223,26 @@ static CGFloat widthCallback(void* ref){
     CGContextTranslateCTM(ctx, 0, self.bounds.size.height);
     CGContextScaleCTM(ctx, 1.0, -1.0);
     // --------- GWW ------------
-    NSMutableAttributedString *atrriStr = [[NSMutableAttributedString alloc] initWithString:@"一二三四五六七八九十一二三四五六七八九十一二三四567890\n123五六七八九十一二三四五六七八九十一二三四五六七八九十gh"];
-    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    CFStringRef fontName = (__bridge CFStringRef)[UIFont systemFontOfSize:17].fontName;
-    CGFloat fontSize     = [UIFont systemFontOfSize:17].pointSize;
-    CTFontRef ctfont     = CTFontCreateWithName(fontName, fontSize, NULL);
-    [attributes setObject:(__bridge id)ctfont forKey:(id)kCTFontAttributeName];
-    CFRelease(ctfont);
-    CGColorRef color = [UIColor blackColor].CGColor;
-    [attributes setObject:(__bridge id)color forKey:(id)kCTForegroundColorAttributeName];
-    
-    CTTextAlignment alignment = kCTTextAlignmentLeft;
-    
-    // 试试修改下面的值 看看效果
-    CGFloat lSpacing = roundf(0);
-    CGFloat headIndent = roundf(0);
-    CGFloat tailIndent = round(-0);
-    //    CGFloat minLine  = lineHeight;
-    //    CGFloat maxLine  = lineHeight;
-    CGFloat pSpacing = roundf(10);
-    CGFloat pSpaceBefore = roundf(0);
-    CTLineBreakMode lineBreak = kCTLineBreakByCharWrapping;// kCTLineBreakByWordWrapping;//kCTLineBreakByClipping;//换行模式
-    CTParagraphStyleSetting setting[] = {
-        { kCTParagraphStyleSpecifierAlignment,          sizeof(alignment), &alignment},
-        //        { kCTParagraphStyleSpecifierMinimumLineHeight,  sizeof(minLine), &minLine },
-        //        { kCTParagraphStyleSpecifierMaximumLineHeight,  sizeof(maxLine), &maxLine },
-        
-        { kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(lSpacing), &lSpacing },
-        { kCTParagraphStyleSpecifierMinimumLineSpacing, sizeof(lSpacing), &lSpacing },
-        { kCTParagraphStyleSpecifierMaximumLineSpacing, sizeof(lSpacing), &lSpacing },
-        // 段落第一行顶部距离段落区间的距离
-        { kCTParagraphStyleSpecifierParagraphSpacingBefore,sizeof(pSpaceBefore), &pSpaceBefore},
-        { kCTParagraphStyleSpecifierParagraphSpacing,   sizeof(pSpacing), &pSpacing },
-        
-        { kCTParagraphStyleSpecifierLineBreakMode,      sizeof(CTLineBreakMode), &lineBreak },
-        // 每段中除第一行外每行的缩进大小
-        {kCTParagraphStyleSpecifierHeadIndent,sizeof(headIndent),&headIndent },
-        // 每段第一行缩进大小
-        {kCTParagraphStyleSpecifierFirstLineHeadIndent,sizeof(headIndent),&headIndent},
-        // 当为正值的时候 表示每行开头到尾部的距离，为负值的时候表示每行尾部到容器边界的距离
-        {kCTParagraphStyleSpecifierTailIndent,sizeof(tailIndent),&tailIndent}
-    };
-    
-    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
-    [attributes setObject:(__bridge id)paragraphStyle forKey:(id)kCTParagraphStyleAttributeName];
-    CFRelease(paragraphStyle);
-    [atrriStr addAttributes:attributes range:NSMakeRange(0, atrriStr.length)];
+    NSMutableAttributedString *atrriStr = [[NSMutableAttributedString alloc] initWithString:@"\uFFFC\uFFFC\uFFFC"];
+    [atrriStr addAttributes:[self p_addAttri:0] range:NSMakeRange(0, 1)];
+    [atrriStr addAttributes:[self p_addAttri:1] range:NSMakeRange(1, 1)];
+    [atrriStr addAttributes:[self p_addAttri:2] range:NSMakeRange(2, 1)];
+
+//    [atrriStr addAttributes:attributes range:NSMakeRange(0, atrriStr.length)];
 //    [atrriStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(0, atrriStr.length)];
     
     CTFramesetterRef frameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)atrriStr);
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL,rect);
-    int offset = 28;
-    CTFrameRef frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, offset), path,nil);
-    
-    CGRect rect2 = UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(50, 0, 0, 0));
-    CGMutablePathRef path2 = CGPathCreateMutable();
-    CGPathAddRect(path2, NULL,rect2);
-    CTFrameRef frame2 =  CTFramesetterCreateFrame(frameSetter, CFRangeMake(offset, atrriStr.length - offset),path, nil);
+    CTFrameRef frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, atrriStr.length), path,nil);
 
-    //
-    CFArrayRef lines = CTFrameGetLines(frame2);
+    CFArrayRef lines = CTFrameGetLines(frame);
     CFIndex count = CFArrayGetCount(lines);
     CGPoint origin[count];
-    CTFrameGetLineOrigins(frame2, CFRangeMake(0, 0),origin);
-    
-    // last line
-    CTLineRef lastLine = CFArrayGetValueAtIndex(lines, count - 1);
-    CGFloat ascent,descent,leading,width = 0;
-    width = CTLineGetTypographicBounds(lastLine, &ascent, &descent, &leading);
-    CGPoint lastLinePos = origin[count - 1];
-    CGRect lastLineRect =  CGRectMake(lastLinePos.x, lastLinePos.y - descent, width, ascent + descent);
-    CGRect baseLine =  CGRectMake(lastLinePos.x, lastLinePos.y, width,0.1);
-    NSLog(@"lastlast rect= %@",NSStringFromCGRect(lastLineRect));
-    CFRange lastLinerange = CTLineGetStringRange(lastLine);
-    NSRange nsLastLineRange = NSMakeRange(lastLinerange.location, lastLinerange.length);
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0),origin);
     
     // first line
+    CGFloat ascent,descent,leading,width = 0;
     CTLineRef line1 = CFArrayGetValueAtIndex(lines,0);
     width = CTLineGetTypographicBounds(line1, &ascent, &descent, &leading);
     CGPoint line1Pos = origin[0];
@@ -275,9 +256,22 @@ static CGFloat widthCallback(void* ref){
     CGRect line2Rect =  CGRectMake(line2Pos.x, line2Pos.y - descent, width, ascent + descent);
     CGRect baseLine2 =  CGRectMake(line2Pos.x, line2Pos.y, width,0.1);
 
+    // last line
+    CTLineRef lastLine = CFArrayGetValueAtIndex(lines, count - 1);
+    width = CTLineGetTypographicBounds(lastLine, &ascent, &descent, &leading);
+    CGPoint lastLinePos = origin[count - 1];
+    CGRect lastLineRect =  CGRectMake(lastLinePos.x, lastLinePos.y - descent, width, ascent + descent);
+    CGRect baseLine =  CGRectMake(lastLinePos.x, lastLinePos.y, width,0.1);
+    NSLog(@"lastlast rect= %@",NSStringFromCGRect(lastLineRect));
+    CFRange lastLinerange = CTLineGetStringRange(lastLine);
+    NSRange nsLastLineRange = NSMakeRange(lastLinerange.location, lastLinerange.length);
     
+    
+    
+    
+
     CTFrameDraw(frame, ctx);
-    CTFrameDraw(frame2, ctx);
+//    CTFrameDraw(frame2, ctx);
     
     CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRangeMake(30, 30), nil,self.bounds.size, nil);
     CGContextRestoreGState(ctx);
@@ -288,6 +282,10 @@ static CGFloat widthCallback(void* ref){
     CGContextTranslateCTM(ctx, 0,  self.bounds.size.height);
     CGContextScaleCTM(ctx, 1, -1);
     
+    UIImage *img = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"img.jpeg" ofType:nil]];
+    CGContextDrawImage(ctx, line1Rect, img.CGImage);
+    CGContextDrawImage(ctx, lastLineRect, img.CGImage);
+    
     UIBezierPath *subPath = [UIBezierPath bezierPathWithRect:lastLineRect];
     CGContextAddPath(ctx, subPath.CGPath);
     CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
@@ -296,7 +294,7 @@ static CGFloat widthCallback(void* ref){
     {
         UIBezierPath *subPath = [UIBezierPath bezierPathWithRect:baseLine];
         CGContextAddPath(ctx, subPath.CGPath);
-        CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
         CGContextSetLineWidth(ctx, 0.3);
         CGContextStrokePath(ctx);
     }
@@ -304,7 +302,7 @@ static CGFloat widthCallback(void* ref){
     {
         UIBezierPath *subPath = [UIBezierPath bezierPathWithRect:baseLine1];
         CGContextAddPath(ctx, subPath.CGPath);
-        CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
         CGContextSetLineWidth(ctx, 0.3);
         CGContextStrokePath(ctx);
     }
@@ -321,7 +319,7 @@ static CGFloat widthCallback(void* ref){
     {
         UIBezierPath *subPath = [UIBezierPath bezierPathWithRect:baseLine2];
         CGContextAddPath(ctx, subPath.CGPath);
-        CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
         CGContextSetLineWidth(ctx, 0.3);
         CGContextStrokePath(ctx);
     }

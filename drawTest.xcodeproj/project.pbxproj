@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		420ED8802089DC02003AA29A /* GWWTextAttachmentCallbackModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 420ED87F2089DC02003AA29A /* GWWTextAttachmentCallbackModel.m */; };
 		42236D4320401003005F7B4D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42236D4220401003005F7B4D /* AppDelegate.m */; };
 		42236D4620401003005F7B4D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42236D4520401003005F7B4D /* ViewController.m */; };
 		42236D4920401003005F7B4D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42236D4720401003005F7B4D /* Main.storyboard */; };
@@ -20,9 +21,12 @@
 		42236D642043F714005F7B4D /* GWWImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 42236D632043F714005F7B4D /* GWWImageAttachment.m */; };
 		42236D6620440417005F7B4D /* img.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 42236D6520440417005F7B4D /* img.jpeg */; };
 		42236D6920440C2D005F7B4D /* GWWAttributeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 42236D6820440C2D005F7B4D /* GWWAttributeLabel.m */; };
+		42FE363F208D8874003EC487 /* meinv.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 42FE363E208D8874003EC487 /* meinv.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		420ED87E2089DC02003AA29A /* GWWTextAttachmentCallbackModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GWWTextAttachmentCallbackModel.h; sourceTree = "<group>"; };
+		420ED87F2089DC02003AA29A /* GWWTextAttachmentCallbackModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GWWTextAttachmentCallbackModel.m; sourceTree = "<group>"; };
 		42236D3E20401003005F7B4D /* drawTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = drawTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42236D4120401003005F7B4D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		42236D4220401003005F7B4D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -44,6 +48,7 @@
 		42236D6520440417005F7B4D /* img.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img.jpeg; sourceTree = "<group>"; };
 		42236D6720440C2D005F7B4D /* GWWAttributeLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GWWAttributeLabel.h; sourceTree = "<group>"; };
 		42236D6820440C2D005F7B4D /* GWWAttributeLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GWWAttributeLabel.m; sourceTree = "<group>"; };
+		42FE363E208D8874003EC487 /* meinv.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = meinv.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				42236D6520440417005F7B4D /* img.jpeg */,
+				42FE363E208D8874003EC487 /* meinv.jpg */,
 				42236D4120401003005F7B4D /* AppDelegate.h */,
 				42236D4220401003005F7B4D /* AppDelegate.m */,
 				42236D4420401003005F7B4D /* ViewController.h */,
@@ -87,6 +93,8 @@
 				42236D632043F714005F7B4D /* GWWImageAttachment.m */,
 				42236D5720401015005F7B4D /* TView.h */,
 				42236D5820401015005F7B4D /* TView.m */,
+				420ED87E2089DC02003AA29A /* GWWTextAttachmentCallbackModel.h */,
+				420ED87F2089DC02003AA29A /* GWWTextAttachmentCallbackModel.m */,
 				42236D6720440C2D005F7B4D /* GWWAttributeLabel.h */,
 				42236D6820440C2D005F7B4D /* GWWAttributeLabel.m */,
 				42236D5A204011F8005F7B4D /* TLayer.h */,
@@ -170,6 +178,7 @@
 				42236D6620440417005F7B4D /* img.jpeg in Resources */,
 				42236D4E20401003005F7B4D /* LaunchScreen.storyboard in Resources */,
 				42236D4B20401003005F7B4D /* Assets.xcassets in Resources */,
+				42FE363F208D8874003EC487 /* meinv.jpg in Resources */,
 				42236D612043E49F005F7B4D /* Img.txt in Resources */,
 				42236D4920401003005F7B4D /* Main.storyboard in Resources */,
 			);
@@ -182,6 +191,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				420ED8802089DC02003AA29A /* GWWTextAttachmentCallbackModel.m in Sources */,
 				42236D642043F714005F7B4D /* GWWImageAttachment.m in Sources */,
 				42236D4620401003005F7B4D /* ViewController.m in Sources */,
 				42236D6920440C2D005F7B4D /* GWWAttributeLabel.m in Sources */,
@@ -245,7 +255,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -323,7 +333,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P32KBN5NR6;
 				INFOPLIST_FILE = drawTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = zy.drawTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -336,7 +348,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P32KBN5NR6;
 				INFOPLIST_FILE = drawTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = zy.drawTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";

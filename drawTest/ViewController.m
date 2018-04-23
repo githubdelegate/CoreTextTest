@@ -20,10 +20,10 @@
     [super viewDidLoad];
     
     UIView *redv = [[UIView alloc] initWithFrame:self.view.bounds];
-    redv.backgroundColor = [UIColor redColor];
+    redv.backgroundColor = [UIColor grayColor];
     [self.view addSubview:redv];
     
-    TView *v = [[TView alloc] initWithFrame:CGRectMake(0,20,self.view.bounds.size.width,500)];
+    TView *v = [[TView alloc] initWithFrame:CGRectMake(0,100,self.view.bounds.size.width,500)];
 //    TView *v = [[TView alloc] initWithFrame:self.view.bounds];
 //    v.clearsContextBeforeDrawing = NO;
     v.attributeStringPath = [[NSBundle mainBundle] pathForResource:@"Img.txt" ofType:nil];
